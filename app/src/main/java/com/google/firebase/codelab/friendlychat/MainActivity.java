@@ -20,6 +20,7 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.ViewTarget;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -180,7 +182,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             protected void onBindViewHolder(@NonNull final MessageViewHolder viewHolder,
                                             int position, @NonNull
-                                            FriendlyMessage friendlyMessage) {
+                                                    FriendlyMessage friendlyMessage) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
