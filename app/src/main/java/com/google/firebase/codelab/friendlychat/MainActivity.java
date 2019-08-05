@@ -20,13 +20,6 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -43,6 +36,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.ViewTarget;
@@ -154,14 +153,21 @@ public class MainActivity extends AppCompatActivity
         // New child entries
         mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
+        Log.i(TAG, "Data : " + mFirebaseDatabaseReference.child(MESSAGES_CHILD));
+
         SnapshotParser<FriendlyMessage> parser = new SnapshotParser<FriendlyMessage>() {
             @NonNull
             @Override
             public FriendlyMessage parseSnapshot(@NonNull DataSnapshot dataSnapshot) {
                 FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
+                Log.i(TAG, "Now Just about to enter the IF block" );
+
                 if (friendlyMessage != null) {
+                    Log.i(TAG, "Now in IF block" );
                     friendlyMessage.setId(dataSnapshot.getKey());
                 }
+                Log.i(TAG, "Now in here" );
+                Log.i(TAG, "Database name : " + friendlyMessage.getName());
                 return friendlyMessage;
             }
         };
@@ -172,9 +178,12 @@ public class MainActivity extends AppCompatActivity
                 new FirebaseRecyclerOptions.Builder<FriendlyMessage>()
                         .setQuery(messagesRef, parser)
                         .build();
+        Log.i(TAG, "Firebase Query database is set" +options );
+
         mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(options) {
             @Override
             public MessageViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+                Log.i(TAG, "Lets create the view holder" );
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
                 return new MessageViewHolder(inflater.inflate(R.layout.item_message, viewGroup, false));
             }
@@ -184,6 +193,7 @@ public class MainActivity extends AppCompatActivity
                                             int position, @NonNull
                                                     FriendlyMessage friendlyMessage) {
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                Log.i(TAG, "let's bind the created view" );
                 if (friendlyMessage.getText() != null) {
                     viewHolder.messageTextView.setText(friendlyMessage.getText());
                     viewHolder.messageTextView.setVisibility(TextView.VISIBLE);
@@ -288,7 +298,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         ImageView mAddMessageImageView;
         mAddMessageImageView = findViewById(R.id.addMessageImageView);
         mAddMessageImageView.setOnClickListener(new View.OnClickListener() {
@@ -310,6 +319,7 @@ public class MainActivity extends AppCompatActivity
         // Check if user is signed in.
         // TODO: Add code to check if user is signed in.
         mFirebaseAdapter.startListening();
+
 
     }
 
